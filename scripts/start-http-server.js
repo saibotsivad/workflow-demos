@@ -10,6 +10,8 @@ if (delay) {
 	const start = Date.now()
 	console.log('Blocking delay to start the server.')
 	await promises.setTimeout(delay)
+	// If you've backgrounded the startup using a simple `&` you will find that
+	// this error message is never seen.
 	console.log(`Starting the server after a ${Date.now() - start}ms delay. (Expected: ~${delay})`)
 }
 
