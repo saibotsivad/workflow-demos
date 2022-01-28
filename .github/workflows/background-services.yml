@@ -1,0 +1,38 @@
+#
+# This workflow is to show how you can start a long-running background process and
+# continue on to additional steps, printing error output later.
+#
+# The main use case is for integration test scenarios, where you want to do something
+# like this:
+# - run: npm run start # but background it
+# - run: npm run wait-for-server
+# - run: npm run integration-tests
+#
+# If you want you can fully background the running script using the & character, for
+# example `- run: npm run start &` but if it crashes along the way, you might not get the
+# errors printed out in a useful way, and the step won't be marked as failing.
+#
+
+name: background-services
+
+on:
+  push:
+    branches: [ 'feature/*' ]
+
+jobs:
+  build:
+    environment: test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [ 16.x ]
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: npm ci
+    - run: node ./scripts/start-http-server.js --port=3000 & # not blocking
+    - run: node ./scripts/wait-for-server.js --port=3000 # blocking
+    - run: echo "now you can run integration tests because the server is running"
