@@ -1,0 +1,27 @@
+{
+  "name": "workflow-demos",
+  "version": "0.0.0",
+  "private": true,
+  "description": "A library of different things you can do with Github Workflows, meant as a resource for myself and to share with others.",
+  "type": "module",
+  "scripts": {
+    "lint": "eslint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/saibotsivad/workflow-demos.git"
+  },
+  "author": {
+    "name": "Tobias Davis",
+    "email": "tobias@davistobias.com",
+    "url": "https://davistobias.com"
+  },
+  "license": "SEE LICENSE IN LICENSE.md",
+  "bugs": {
+    "url": "https://github.com/saibotsivad/workflow-demos/issues"
+  },
+  "homepage": "https://github.com/saibotsivad/workflow-demos",
+  "devDependencies": {
+    "@saibotsivad/eslint-config-saibotsivad": "*"
+  }
+}
