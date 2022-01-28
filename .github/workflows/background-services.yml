@@ -1,6 +1,6 @@
 #
 # This workflow is to show how you can start a long-running background process and
-# continue on to additional steps, printing error output later.
+# continue on to additional steps, with different strategies.
 #
 # The main use case is for integration test scenarios, where you want to do something
 # like this:
@@ -33,6 +33,6 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: npm ci
-    - run: node ./scripts/start-http-server.js --port=3000 & # not blocking
+    - run: node ./scripts/start-http-server.js --port=3000 --delay=5000 & # not blocking
     - run: node ./scripts/wait-for-server.js --port=3000 # blocking
     - run: echo "now you can run integration tests because the server is running"
