@@ -33,6 +33,6 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: npm ci
-    - run: node ./scripts/start-http-server.js --port=3000 --delay=5000 & # not blocking
+    - run: node ./scripts/start-http-server.js --port=3000 --delay=8000 & # not blocking
     - run: node ./scripts/wait-for-server.js --port=3000 # blocking
     - run: echo "now you can run integration tests because the server is running"

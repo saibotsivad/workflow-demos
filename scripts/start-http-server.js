@@ -7,8 +7,10 @@ delay = parseInt(delay || 0, 10)
 port = parseInt(port || 3000, 10)
 
 if (delay) {
+	const start = Date.now()
 	console.log('Blocking delay to start the server.')
 	await promises.setTimeout(delay)
+	console.log(`Starting the server after a ${Date.now() - start}ms delay. (Expected: ~${delay})`)
 }
 
 const server = createServer((req, res) => {
