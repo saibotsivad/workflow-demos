@@ -28,10 +28,6 @@ jobs:
         node-version: [ 16.x ]
     steps:
     - uses: actions/checkout@v2
-    - uses: actions/setup-node@v2
-      with:
-        node-version: ${{ matrix.node }}
-        cache: npm
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
@@ -46,14 +42,11 @@ jobs:
         node-version: [ 16.x ]
     steps:
     - uses: actions/checkout@v2
-    - uses: actions/setup-node@v2
-      with:
-        node-version: ${{ matrix.node }}
-        cache: npm
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
+    - run: npm ci # and then `npm run build` for typical apps
     - run: node ./scripts/start-http-server.js --port=3000 --delay=8000 # blocking forever
   integration:
     needs: [build] # note: not waiting for "start" to finish
@@ -64,14 +57,11 @@ jobs:
         node-version: [ 16.x ]
     steps:
     - uses: actions/checkout@v2
-    - uses: actions/setup-node@v2
-      with:
-        node-version: ${{ matrix.node }}
-        cache: npm
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
+    - run: npm ci # and then `npm run build` for typical apps
     - run: node ./scripts/wait-for-server.js --port=3000 # also blocking
     - run: echo "now you can run integration tests because the server is running"
     - run: echo "...but how to stop the other job as a success?"
