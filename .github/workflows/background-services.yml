@@ -1,0 +1,69 @@
+#
+# This workflow is to show how you can start a long-running background process and
+# continue on to additional steps, with different strategies.
+#
+# The main use case is for integration test scenarios, where you want to do something
+# like this:
+# - run: npm run start # but background it
+# - run: npm run wait-for-server
+# - run: npm run integration-tests
+#
+# If you want you can fully background the running script using the & character, for
+# example `- run: npm run start &` but if it crashes along the way, you might not get the
+# errors printed out in a useful way, and the step won't be marked as failing.
+#
+
+name: background-services
+
+on:
+  push:
+    branches: [ 'feature/*' ]
+
+jobs:
+  build:
+    environment: test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [ 16.x ]
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: npm ci # and then `npm run build` for typical apps
+  start:
+    needs: [build] # blocks until "build" is done
+    environment: test
+    runs-on: ubuntu-latest
+    container:
+      ports: [3000] # need to expose port across jobs
+    strategy:
+      matrix:
+        node-version: [ 16.x ]
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: npm ci # and then `npm run build` for typical apps
+    - run: node ./scripts/start-http-server.js --port=3000 --delay=8000 # blocking forever
+  integration:
+    needs: [build] # note: not waiting for "start" to finish
+    environment: test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [ 16.x ]
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: npm ci # and then `npm run build` for typical apps
+    - run: node ./scripts/wait-for-server.js --port=3000 # also blocking
+    - run: echo "now you can run integration tests because the server is running"
+    - run: echo "...but how to stop the other job as a success?"

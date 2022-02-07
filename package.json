@@ -23,5 +23,9 @@
   "homepage": "https://github.com/saibotsivad/workflow-demos",
   "devDependencies": {
     "@saibotsivad/eslint-config-saibotsivad": "*"
+  },
+  "dependencies": {
+    "httpie": "^1.1.2",
+    "mri": "^1.2.0"
   }
 }
