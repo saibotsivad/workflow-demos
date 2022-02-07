@@ -37,6 +37,8 @@ jobs:
     needs: [build] # blocks until "build" is done
     environment: test
     runs-on: ubuntu-latest
+    container:
+      ports: [3000] # need to expose port across jobs
     strategy:
       matrix:
         node-version: [ 16.x ]
