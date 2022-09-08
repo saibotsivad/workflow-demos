@@ -1,0 +1,28 @@
+#
+# This workflow would be used if you have a Github repository where, for whatever reason, you do not accept pull requests.
+#
+# Github does not provide a control mechanism in the repository settings for this, but you can achieve it by running a
+# workflow on all PRs that closes them.
+#
+# Inspired by: https://github.com/imjasonh/nopr-action/blob/main/.github/workflows/nopr.yaml
+#
+
+# If you want this to run on *all* branches:
+on: pull_request
+
+# If you want this to run on *some* branches:
+# on:
+#   pull_request:
+#     branches: [ branch1, branch2 ]
+
+jobs:
+  close:
+    name: Close Pull Requests
+    runs-on: ubuntu-latest
+    steps:
+    - name: Close Pull Requests
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        # Find all open PRs, and close them.
+        gh pr list --repo=${{ github.repository }} --state=open --json=number | jq '.[].number' | xargs gh pr close --repo=${{ github.repository }} -d
